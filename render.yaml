@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: novnc-desktop
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 6080
+    autoDeploy: true
