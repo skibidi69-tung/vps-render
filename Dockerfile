@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN mkdir -p /root/.vnc
 
-RUN echo "vncpass123" | vncpasswd -f > /root/.vnc/passwd && \
+RUN echo "phat12345" | vncpasswd -f > /root/.vnc/passwd && \
     chmod 600 /root/.vnc/passwd
 
 RUN echo '#!/bin/bash\n\
