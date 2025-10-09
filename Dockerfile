@@ -1,44 +1,26 @@
-FROM ubuntu:22.04
+# Sử dụng baseimage nhẹ từ Alpine với hỗ trợ GUI/VNC/noVNC tích hợp
+FROM jlesage/baseimage-gui:alpine-3.19-v4
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV DISPLAY=:1
-ENV VNC_PORT=5901
-ENV NOVNC_PORT=6080
+# Cài đặt XFCE (GUI nhẹ, mượt, tiêu tốn ít RAM/CPU) và các công cụ cơ bản
+RUN add-pkg \
+        dbus \
+        dbus-x11 \
+        xfce4 \
+        xfce4-terminal \
+        xfce4-taskmanager \
+        xfce4-screenshooter \
+        thunar \
+        mousepad \
+        firefox \
+        && \
+    # Xóa cache để giữ image nhẹ
+    rm -rf /tmp/* /var/cache/apk/*
 
-RUN apt-get update && apt-get install -y \
-    xfce4 \
-    xfce4-goodies \
-    tightvncserver \
-    dbus-x11 \
-    firefox \
-    nano \
-    wget \
-    curl \
-    net-tools \
-    supervisor \
-    novnc \
-    websockify \
-    python3 \
-    x11vnc \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Copy script khởi động
+COPY startapp.sh /startapp.sh
 
-RUN mkdir -p /root/.vnc
+# Làm script có thể chạy
+RUN chmod +x /startapp.sh
 
-RUN echo "phat12345" | vncpasswd -f > /root/.vnc/passwd && \
-    chmod 600 /root/.vnc/passwd
-
-RUN echo '#!/bin/bash\n\
-xrdb $HOME/.Xresources\n\
-startxfce4 &' > /root/.vnc/xstartup && \
-    chmod +x /root/.vnc/xstartup
-
-RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
-
-RUN mkdir -p /var/log/supervisor
-
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-EXPOSE 6080
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Đặt tên app
+RUN set-cont-env APP_NAME "Lightweight XFCE GUI"
