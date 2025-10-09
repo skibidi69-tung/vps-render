@@ -1,10 +1,4 @@
-services:
-  - type: web
-    name: novnc-desktop
-    env: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
-    envVars:
-      - key: PORT
-        value: 6080
-    autoDeploy: true
+#!/bin/sh
+
+# Khởi động XFCE với dbus để chạy mượt
+exec /usr/bin/dbus-launch --exit-with-session /usr/bin/startxfce4
