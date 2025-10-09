@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# Khởi động XFCE với dbus để chạy mượt
+# Khởi động dbus và XFCE để chạy mượt mà
 exec /usr/bin/dbus-launch --exit-with-session /usr/bin/startxfce4
