@@ -1,7 +1,7 @@
-# Sử dụng baseimage nhẹ từ Alpine với hỗ trợ GUI/VNC/noVNC tích hợp
+# Base image nhẹ từ Alpine với GUI/VNC/noVNC tích hợp sẵn
 FROM jlesage/baseimage-gui:alpine-3.19-v4
 
-# Cài đặt XFCE (GUI nhẹ, mượt, tiêu tốn ít RAM/CPU) và các công cụ cơ bản
+# Cài đặt XFCE (GUI nhẹ, mượt) và công cụ cơ bản, thêm Firefox ESR
 RUN add-pkg \
         dbus \
         dbus-x11 \
@@ -11,16 +11,16 @@ RUN add-pkg \
         xfce4-screenshooter \
         thunar \
         mousepad \
-        firefox \
+        firefox-esr \
         && \
-    # Xóa cache để giữ image nhẹ
+    # Xóa cache để image nhẹ (~500MB)
     rm -rf /tmp/* /var/cache/apk/*
 
-# Copy script khởi động
+# Copy script khởi động GUI
 COPY startapp.sh /startapp.sh
 
-# Làm script có thể chạy
+# Làm script executable
 RUN chmod +x /startapp.sh
 
-# Đặt tên app
-RUN set-cont-env APP_NAME "Lightweight XFCE GUI"
+# Đặt tên app cho noVNC interface
+RUN set-cont-env APP_NAME "Lightweight XFCE GUI with Firefox"
