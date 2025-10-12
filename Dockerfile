@@ -1,26 +1,17 @@
-# Base image nhẹ từ Alpine với GUI/VNC/noVNC tích hợp sẵn
-FROM jlesage/baseimage-gui:alpine-3.19-v4
+# 使用 Ubuntu 22.04 作为基础镜像
+FROM ubuntu:22.04
 
-# Cài đặt XFCE (GUI nhẹ, mượt) và công cụ cơ bản, thêm Firefox ESR
-RUN add-pkg \
-        dbus \
-        dbus-x11 \
-        xfce4 \
-        xfce4-terminal \
-        xfce4-taskmanager \
-        xfce4-screenshooter \
-        thunar \
-        mousepad \
-        firefox-esr \
-        && \
-    # Xóa cache để image nhẹ (~500MB)
-    rm -rf /tmp/* /var/cache/apk/*
+# 安装 Shellinabox
+RUN apt-get update && \
+    apt-get install -y shellinabox && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy script khởi động GUI
-COPY startapp.sh /startapp.sh
+# 设置 root 用户的密码为 'root'
+RUN echo 'root:123456' | chpasswd
 
-# Làm script executable
-RUN chmod +x /startapp.sh
+# 暴露 22 端口
+EXPOSE 22
 
-# Đặt tên app cho noVNC interface
-RUN set-cont-env APP_NAME "Lightweight XFCE GUI with Firefox"
+# 启动 Shellinabox
+CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
