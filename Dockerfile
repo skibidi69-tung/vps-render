@@ -16,8 +16,8 @@ ENV LC_ALL en_US.UTF-8
 ARG USER=appuser
 ARG UID=1000
 ARG GID=1000
-ARG USER_PASSWORD=userpassword
-ARG ROOT_PASSWORD=Aa.cbbdft123
+ARG USER_PASSWORD=12345
+ARG ROOT_PASSWORD=12345
 
 # 安装常用工具、Shellinabox、SSH 服务器和 FTP 服务器，设置语言环境，清理缓存
 RUN apt-get update && apt-get install -y --no-install-recommends \
